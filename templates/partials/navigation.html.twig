@@ -14,9 +14,15 @@
             <span class="logo-text">NOIR FASHION STORE</span>
         </a>
         <ul class="nav-links">
-            <li><a href="#home" class="nav-link active">Home</a></li>
-            <li><a href="{{ path('blog') }}" class="nav-link">Fasion Blog</a></li>
-            <li><a href="{{ path('contact') }}" class="nav-link">Contact</a></li>
+            <li><a href="{{ path('home') }}" class="{{ (app.request.attributes.get('_route') == 'home')  ? 'active': ''}} nav-link">Home</a></li>
+            <li><a href="{{ path('blog') }}" class="{{ (app.request.attributes.get('_route') == 'blog')  ? 'active': ''}} nav-link">Fasion Blog</a></li>
+            <li><a href="{{ path('contact') }}" class="{{ (app.request.attributes.get('_route') == 'contact')  ? 'active': ''}} nav-link">Contact</a></li>
+            {% if not app.user %}
+                <li><a href="{{ path('app_login') }}" class="nav-cta">Log in</a></li>
+                <li><a href="{{ path('app_register') }}" class="nav-cta">Register</a></li>
+            {% else %}
+                <li><a href="{{ path('app_logout') }}" class="nav-cta">Log out</a></li>
+            {% endif %}
         </ul>
         <div class="menu-toggle" id="menuToggle">
             <span></span>

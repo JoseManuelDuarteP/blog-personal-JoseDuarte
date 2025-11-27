@@ -40,6 +40,56 @@ body {
 	overflow-x: hidden;
 }
 
+/* Estilo general de la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #333;
+    color: #f4f4f4;
+    font-weight: bold;
+}
+
+/* Estilos adicionales */
+th, td {
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-submit {
+    background-color: #5cb85c;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.form-submit:hover {
+    background-color: #4cae4c;
+}
+
+/* Contenedor de la tabla */
+table-wrapper {
+    margin-top: 30px;
+}
+
+.contact-form-wrapper {
+    padding: 20px;
+    text-align: center;
+}
+
 /* Navigation */
 nav {
 	position: fixed;
@@ -56,6 +106,12 @@ nav.scrolled {
 	padding: 15px 50px;
 	background: rgba(0, 0, 0, 0.98);
 	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+}
+
+.separator {
+    margin: 40px 0; /* añade espacio arriba y abajo */
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2); /* estilo elegante acorde al tema */
 }
 
 .nav-container {
@@ -1372,6 +1428,14 @@ nav.scrolled {
 	overflow: hidden;
 }
 
+.contact-form-wrapper2 {
+	background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+	padding: 50px;
+	border-radius: 10px;
+	position: relative;
+	overflow: hidden;
+}
+
 .contact-form-wrapper::before {
 	content: '';
 	position: absolute;
@@ -1676,6 +1740,29 @@ footer {
 	justify-content: center;
 	font-size: 10px;
 	color: var(--text-muted);
+}
+
+.login-container {
+	display: flex;
+	text-align: center;
+	justify-content: center;
+	padding-top: 80px;
+}
+
+.cat-container {
+    display: flex;
+    justify-content: center;
+    padding: 80px 50px;  /* Aumenta el espacio de los lados (50px) y arriba/abajo (80px) */
+    width: 100%;
+}
+
+.cat-form-wrapper {
+    width: 100%;  /* Asegura que el formulario ocupe todo el espacio disponible */
+    max-width: 1200px;  /* Limita el formulario a 1200px de ancho */
+    margin: 0 auto;  /* Centra el formulario */
+    padding: 30px;
+    border-radius: 8px;
+    background-color: #333;  /* Fondo blanco para el formulario */
 }
 
 /* Animations */
