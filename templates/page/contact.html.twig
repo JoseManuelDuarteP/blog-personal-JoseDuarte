@@ -2,8 +2,8 @@
 {% block title %}Contact{% endblock %}
 
 {% block body %}
-    {% for message in app.flashes('notice') %}
-                <div class="alert alert-notice">
+    {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
                     {{ message }}
                 </div>
     {% endfor %}

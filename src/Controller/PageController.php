@@ -46,8 +46,7 @@ final class PageController extends AbstractController
             $flashes = $session->getFlashBag();
 
             $flashes->add('success', 'Comentario enviado con éxito.');
-            dump($flashes);
-            exit;
+
             return $this->redirectToRoute('contact');
         }
 
