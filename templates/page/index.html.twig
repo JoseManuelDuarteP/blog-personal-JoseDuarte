@@ -91,94 +91,20 @@
         </div>
 
         <div class="grid" id="collectionsGrid">
-            <div class="collection-card" data-category="women">
-                <div class="collection-thumbnail">
-                    <img src="images/urban-edge.avif" alt="Urban Edge Women's Collection">
+            {% for image in images %}
+                <div class="collection-card">
+                    <div class="collection-thumbnail">
+                        <img src="/images/index/gallery/{{ image.file }}" alt="Collection Image {{ image.id }}">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-badge">{{ image.category.name }}</span>
+                        <h3 class="card-title">{{ image.title }}</h3>
+                        <p class="card-subtitle">Views: {{ image.numViews }}</p>
+                        <p class="card-subtitle">Likes: {{ image.numLikes }}</p>
+                        <p class="card-price">${{ image.price }}</p>
+                    </div>
                 </div>
-                <div class="card-content">
-                    <span class="card-badge">New Arrival</span>
-                    <h3 class="card-title">Urban Edge</h3>
-                    <p class="card-subtitle">Women's Collection</p>
-                    <p class="card-price">From $299</p>
-                </div>
-            </div>
-            <div class="collection-card" data-category="limited">
-                <div class="collection-thumbnail">
-                    <img src="images/midnight-luxe.avif" alt="Midnight Luxe Limited Edition">
-                </div>
-                <div class="card-content">
-                    <span class="card-badge">Limited</span>
-                    <h3 class="card-title">Midnight Luxe</h3>
-                    <p class="card-subtitle">Exclusive Drop</p>
-                    <p class="card-price">From $899</p>
-                </div>
-            </div>
-            <div class="collection-card" data-category="men">
-                <div class="collection-thumbnail">
-                    <img src="images/neo-classic.avif" alt="Neo Classic Men's Essentials">
-                </div>
-                <div class="card-content">
-                    <span class="card-badge">Bestseller</span>
-                    <h3 class="card-title">Neo Classic</h3>
-                    <p class="card-subtitle">Men's Essentials</p>
-                    <p class="card-price">From $399</p>
-                </div>
-            </div>
-            <div class="collection-card" data-category="accessories">
-                <div class="collection-thumbnail">
-                    <img src="images/accent-pieces.avif" alt="Accent Pieces Accessories">
-                </div>
-                <div class="card-content">
-                    <span class="card-badge">Trending</span>
-                    <h3 class="card-title">Accent Pieces</h3>
-                    <p class="card-subtitle">Accessories</p>
-                    <p class="card-price">From $149</p>
-                </div>
-            </div>
-            <div class="collection-card" data-category="women">
-                <div class="collection-thumbnail">
-                    <img src="images/spring-bloom.avif" alt="Spring Bloom Women's Spring">
-                </div>
-                <div class="card-content">
-                    <span class="card-badge">Pre-Order</span>
-                    <h3 class="card-title">Spring Bloom</h3>
-                    <p class="card-subtitle">Women's Spring</p>
-                    <p class="card-price">From $249</p>
-                </div>
-            </div>
-            <div class="collection-card" data-category="men">
-                <div class="collection-thumbnail">
-                    <img src="images/street-rebel.avif" alt="Street Rebel Men's Streetwear">
-                </div>
-                <div class="card-content">
-                    <span class="card-badge">Hot</span>
-                    <h3 class="card-title">Street Rebel</h3>
-                    <p class="card-subtitle">Men's Streetwear</p>
-                    <p class="card-price">From $199</p>
-                </div>
-            </div>
-            <div class="collection-card" data-category="limited">
-                <div class="collection-thumbnail">
-                    <img src="images/avant-garde.avif" alt="Avant Garde Art Meets Fashion">
-                </div>
-                <div class="card-content">
-                    <span class="card-badge">Exclusive</span>
-                    <h3 class="card-title">Avant Garde</h3>
-                    <p class="card-subtitle">Art Meets Fashion</p>
-                    <p class="card-price">From $1,299</p>
-                </div>
-            </div>
-            <div class="collection-card" data-category="accessories">
-                <div class="collection-thumbnail">
-                    <img src="images/minimal-chic.avif" alt="Minimal Chic Timeless Accessories">
-                </div>
-                <div class="card-content">
-                    <span class="card-badge">Essentials</span>
-                    <h3 class="card-title">Minimal Chic</h3>
-                    <p class="card-subtitle">Timeless Accessories</p>
-                    <p class="card-price">From $89</p>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </section>
 

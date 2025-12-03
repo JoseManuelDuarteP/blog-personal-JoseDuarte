@@ -10,14 +10,19 @@ use App\Form\ComentarioFormType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use App\Entity\Image;
 
 final class PageController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function index(): Response
+    public function index(ManagerRegistry $doctrine): Response
     {
+        $repoImages = $doctrine->getRepository(Image::class);
+        $images = $repoImages->findAll();
+
         return $this->render('page/index.html.twig', [
             'controller_name' => 'PageController',
+            'images' => $images,
         ]);
     }
 
@@ -41,11 +46,10 @@ final class PageController extends AbstractController
             $entityManager->persist($comentario);
             $entityManager->flush();
             
-            $session = new Session();
-            $session->start();
-            $flashes = $session->getFlashBag();
+            // $session = new Session();
+            // $flashes = $session->getFlashBag();
 
-            $flashes->add('success', 'Comentario enviado con éxito.');
+            // $flashes->add('success', 'Comentario enviado con éxito.');
 
             return $this->redirectToRoute('contact');
         }
