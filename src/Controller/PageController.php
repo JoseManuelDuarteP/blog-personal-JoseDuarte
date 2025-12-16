@@ -88,4 +88,15 @@ final class PageController extends AbstractController
         return $this->json($data);
     }
 
+    #[Route('/product_file/{id}', name: 'product_file')]
+    public function productFile($id, ManagerRegistry $doctrine): Response
+    {
+        $repo = $doctrine->getRepository(Image::class);
+        $image = $repo->find($id);
+
+        return $this->render('page/product_file.html.twig', [
+            'controller_name' => 'PageController',
+            'image' => $image,
+        ]);
+    }
 }

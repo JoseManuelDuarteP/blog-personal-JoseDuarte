@@ -25,7 +25,9 @@ $(document).on('click', '.tab-btn', function () {
                 grid.append(`
                     <div class="collection-card">
                         <div class="collection-thumbnail">
-                            <img src="/images/index/gallery/${image.file}" alt="${image.title}">
+                            <a href="#">
+                                <img src="/images/index/gallery/${image.file}" alt="${image.title}">
+                            </a>
                         </div>
                         <div class="card-content">
                             <span class="card-badge">${image.category}</span>

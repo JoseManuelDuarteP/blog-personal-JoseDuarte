@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% block title %}Product File{% endblock %}
+
+{% block body %}
+    
+    <div class="cat-container">
+        <div class="cat-form-wrapper">
+            <h2 class="section-title">Product Info</h2>
+            <p class="texto-imagen"><b>Name: </b>{{ image.title }}</p>
+            <img src="/images/index/gallery/{{ image.file }}" alt="Sample Product" class="product-image">
+            <p class="texto-imagen"><b>Likes: </b>{{ image.numLikes }}</p>
+            <p class="texto-imagen"><b>Views: </b>{{ image.numViews }}</p>
+            <div class="compra">
+                <p class="texto-imagen"><b>Price: </b>{{ image.price }}$</p>
+                <button class="form-submit">Add to Cart</button>
+                <button class="form-submit">Give a like</button>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

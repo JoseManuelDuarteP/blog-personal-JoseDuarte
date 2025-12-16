@@ -95,7 +95,9 @@
             {% for image in images %}
                 <div class="collection-card">
                     <div class="collection-thumbnail">
-                        <img src="/images/index/gallery/{{ image.file }}" alt="Collection Image {{ image.id }}">
+                        <a href="{{ path('product_file', {'id': image.id}) }}">
+                            <img src="/images/index/gallery/{{ image.file }}" alt="Collection Image {{ image.id }}">
+                        </a>
                     </div>
                     <div class="card-content">
                         <span class="card-badge">{{ image.category.name }}</span>
