@@ -40,4 +40,14 @@ class ImageRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function findByCategoryName(string $name)
+    {
+        return $this->createQueryBuilder('i')
+            ->join('i.category', 'c')
+            ->andWhere('c.name = :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getResult();
+    }
+
 }

@@ -11,6 +11,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Image;
+use App\Repository\ImageRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 final class PageController extends AbstractController
 {
@@ -59,4 +61,31 @@ final class PageController extends AbstractController
             'controller_name' => 'PageController',
         ]);
     }
+
+    #[Route('/imagenes/{categoria}', name: 'imagenes_por_categoria')]
+    public function imagenesPorCategoria(string $categoria, ImageRepository $imageRepository): JsonResponse 
+        {
+
+        if ($categoria === 'All') {
+            $imagenes = $imageRepository->findAll();
+        } else {
+            $imagenes = $imageRepository->findByCategoryName($categoria);
+        }
+
+        $data = [];
+
+        foreach ($imagenes as $imagen) {
+            $data[] = [
+                'title' => $imagen->getTitle(),
+                'file' => $imagen->getFile(),
+                'category' => $imagen->getCategory()->getName(),
+                'views' => $imagen->getNumViews(),
+                'likes' => $imagen->getNumLikes(),
+                'price' => $imagen->getPrice(),
+            ];
+        }
+
+        return $this->json($data);
+    }
+
 }
