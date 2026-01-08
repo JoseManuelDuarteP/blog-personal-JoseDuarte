@@ -13,7 +13,7 @@
             <div class="compra">
                 <p class="texto-imagen"><b>Price: </b>{{ image.price }}$</p>
                 <button class="form-submit">Add to Cart</button>
-                <button class="form-submit">Give a like</button>
+                <a href="{{ path('like_image', {'imageId': image.id}) }}"><button class="form-submit">Like</button></a>
             </div>
         </div>
     </div>

@@ -12,7 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Image;
 use App\Repository\ImageRepository;
+use App\Repository\LikeRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Entity\Like;
 
 final class PageController extends AbstractController
 {
@@ -94,6 +96,53 @@ final class PageController extends AbstractController
         $repo = $doctrine->getRepository(Image::class);
         $image = $repo->find($id);
 
+        return $this->render('page/product_file.html.twig', [
+            'controller_name' => 'PageController',
+            'image' => $image,
+        ]);
+    }
+        //Funciona, hacerlo con ajax para no recargar la pagina
+    #[Route('/like/{imageId}', name: 'like_image')]
+    public function likeImage(int $imageId,
+    ImageRepository $imageRepository, 
+    LikeRepository $likeRepository, 
+    ManagerRegistry $doctrine): Response
+    {
+        $user = $this->getUser();
+        $image = $imageRepository->find($imageId);
+
+        if(!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if (!$image) {
+            return $this->json(['message' => 'Post not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        if ($likeRepository->hasUserLikedImage($user->getId(), $imageId)) {
+            $likeDelete = $doctrine->getRepository(Like::class)->findOneBy([
+                'user' => $user,
+                'image' => $image
+            ]);
+            $image->setNumLikes($image->getNumLikes() - 1);
+            $em = $doctrine->getManager();
+            $em->persist($image);
+            $em->remove($likeDelete);
+            $em->flush();
+            //return $this->json(['message' => 'You have already liked this image'], Response::HTTP_BAD_REQUEST);
+            return $this->render('page/product_file.html.twig', [
+                'controller_name' => 'PageController',
+                'image' => $image,
+            ]);
+        }
+
+        $like = new Like($user, $image);
+        $image->setNumLikes($image->getNumLikes() + 1);
+        $em = $doctrine->getManager();
+        $em->persist($like);
+        $em->persist($image);
+        $em->flush();
+        //return $this->json(['message' => 'Post liked successfully'], Response::HTTP_OK);
         return $this->render('page/product_file.html.twig', [
             'controller_name' => 'PageController',
             'image' => $image,
