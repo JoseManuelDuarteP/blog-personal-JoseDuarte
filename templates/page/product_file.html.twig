@@ -8,14 +8,19 @@
             <h2 class="section-title">Product Info</h2>
             <p class="texto-imagen"><b>Name: </b>{{ image.title }}</p>
             <img src="/images/index/gallery/{{ image.file }}" alt="Sample Product" class="product-image">
-            <p class="texto-imagen"><b>Likes: </b>{{ image.numLikes }}</p>
+            
+            <p class="texto-imagen"><b>Likes: </b><span id="likes-counter">{{ image.numLikes }}</span></p>
+            
             <p class="texto-imagen"><b>Views: </b>{{ image.numViews }}</p>
             <div class="compra">
                 <p class="texto-imagen"><b>Price: </b>{{ image.price }}$</p>
                 <button class="form-submit">Add to Cart</button>
-                <a href="{{ path('like_image', {'imageId': image.id}) }}"><button class="form-submit">Like</button></a>
+                
+                <button class="form-submit like" data-id="{{ image.id }}">Like</button>
             </div>
         </div>
     </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ asset('likeAsc.js') }}"></script>
 {% endblock %}

@@ -102,50 +102,55 @@ final class PageController extends AbstractController
         ]);
     }
         //Funciona, hacerlo con ajax para no recargar la pagina
-    #[Route('/like/{imageId}', name: 'like_image')]
-    public function likeImage(int $imageId,
-    ImageRepository $imageRepository, 
-    LikeRepository $likeRepository, 
-    ManagerRegistry $doctrine): Response
+    #[Route('/like/{imageId}', name: 'like_image', methods: ['POST'])] // Limitamos a POST
+    public function likeImage(
+        int $imageId,
+        ImageRepository $imageRepository, 
+        LikeRepository $likeRepository, 
+        ManagerRegistry $doctrine
+    ): JsonResponse // Cambiamos el tipo de retorno a JsonResponse
     {
         $user = $this->getUser();
+        
+        // Si no hay usuario, devolvemos un error 403 o 401 en formato JSON
+        if(!$user) {
+            return $this->json(['error' => 'Usuario no logueado'], Response::HTTP_UNAUTHORIZED);
+        }
+
         $image = $imageRepository->find($imageId);
 
-        if(!$user) {
-            return $this->redirectToRoute('app_login');
+        if (!$image) {
+            return $this->json(['message' => 'Imagen no encontrada'], Response::HTTP_NOT_FOUND);
         }
 
-        if (!$image) {
-            return $this->json(['message' => 'Post not found'], Response::HTTP_NOT_FOUND);
-        }
+        $em = $doctrine->getManager();
+        $liked = false; // Variable para saber si acabó dando like o quitándolo
 
         if ($likeRepository->hasUserLikedImage($user->getId(), $imageId)) {
+            // QUITAR LIKE
             $likeDelete = $doctrine->getRepository(Like::class)->findOneBy([
                 'user' => $user,
                 'image' => $image
             ]);
+            
             $image->setNumLikes($image->getNumLikes() - 1);
-            $em = $doctrine->getManager();
-            $em->persist($image);
             $em->remove($likeDelete);
-            $em->flush();
-            //return $this->json(['message' => 'You have already liked this image'], Response::HTTP_BAD_REQUEST);
-            return $this->render('page/product_file.html.twig', [
-                'controller_name' => 'PageController',
-                'image' => $image,
-            ]);
+            $liked = false;
+        } else {
+            // DAR LIKE
+            $like = new Like($user, $image);
+            $image->setNumLikes($image->getNumLikes() + 1);
+            $em->persist($like);
+            $liked = true;
         }
 
-        $like = new Like($user, $image);
-        $image->setNumLikes($image->getNumLikes() + 1);
-        $em = $doctrine->getManager();
-        $em->persist($like);
         $em->persist($image);
         $em->flush();
-        //return $this->json(['message' => 'Post liked successfully'], Response::HTTP_OK);
-        return $this->render('page/product_file.html.twig', [
-            'controller_name' => 'PageController',
-            'image' => $image,
+
+        // Devolvemos JSON con el nuevo número y el estado
+        return $this->json([
+            'numLikes' => $image->getNumLikes(),
+            'liked' => $liked // Útil si quieres cambiar el color del botón
         ]);
     }
 }
