@@ -1091,13 +1091,7 @@ nav.scrolled {
 	z-index: 2;
 }
 
-.featured-hero {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 80px;
-	align-items: center;
-	margin-bottom: 100px;
-}
+
 
 .featured-content h2 {
 	font-size: 48px;
@@ -1123,7 +1117,6 @@ nav.scrolled {
 
 .feature-highlights {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
 	gap: 30px;
 	margin-bottom: 40px;
 }
@@ -1244,6 +1237,7 @@ nav.scrolled {
 	font-weight: 600;
 	transition: all 0.3s ease;
 	margin-top: 20px;
+	margin-bottom: 20px;
 	border-radius: 4px;
 }
 

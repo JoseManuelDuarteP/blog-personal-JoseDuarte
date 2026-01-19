@@ -41,9 +41,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Like::class)]
     private Collection $likes;
 
+    /**
+     * @var Collection<int, Post>
+     */
+    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'user')]
+    private Collection $posts;
+
+    /**
+     * @var Collection<int, LikePost>
+     */
+    #[ORM\OneToMany(targetEntity: LikePost::class, mappedBy: 'user')]
+    private Collection $likePosts;
+
     public function __construct()
     {
         $this->likes = new ArrayCollection();
+        $this->posts = new ArrayCollection();
+        $this->likePosts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -131,5 +145,65 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         // @deprecated, to be removed when upgrading to Symfony 8
+    }
+
+    /**
+     * @return Collection<int, Post>
+     */
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
+
+    public function addPost(Post $post): static
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts->add($post);
+            $post->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): static
+    {
+        if ($this->posts->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getUser() === $this) {
+                $post->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LikePost>
+     */
+    public function getLikePosts(): Collection
+    {
+        return $this->likePosts;
+    }
+
+    public function addLikePost(LikePost $likePost): static
+    {
+        if (!$this->likePosts->contains($likePost)) {
+            $this->likePosts->add($likePost);
+            $likePost->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLikePost(LikePost $likePost): static
+    {
+        if ($this->likePosts->removeElement($likePost)) {
+            // set the owning side to null (unless already changed)
+            if ($likePost->getUser() === $this) {
+                $likePost->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

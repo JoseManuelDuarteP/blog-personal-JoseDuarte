@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+{% block title%}New Post{% endblock %}
+
+{% block body %}
+    <div class="cat-container">
+        <div class="cat-form-wrapper">
+        <h2 class="section-title">New Post</h2>
+        {{ form_start(form) }}
+            <div class="form-group">
+                <label for="{{ form.imagen.vars.id }}">Image:</label>
+                {{ form_widget(form.imagen) }}
+            </div>
+			<div class="form-group">
+				<label for="{{ form.titulo.vars.id }}">Title:</label>
+				{{ form_widget(form.titulo) }}
+			</div>
+			<div class="form-group">
+				<label for="{{ form.text.vars.id }}">Text:</label>
+				{{ form_widget(form.text) }}
+				{{ form_errors(form.text) }}
+			</div>
+            <button type="submit" class="form-submit">Publish Post</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

@@ -2,4 +2,42 @@
 {% block title %}Fasion Blog{% endblock %}
 
 {% block body %}
+    <section class="featured" id="featured">
+        <div class="featured-container">
+            <div class="featured-hero">
+                <div class="featured-content">
+                    <span class="label">Recent Posts</span>
+                    <h2>Fashion Blog</h2>
+                    <p>Learn about the most recent fashion trends and insights from our community and experts.</p>
+                    <a href="{{ path('new_post') }}" class="feature-cta">Post Yourself NOW!</a>
+                    
+                    <div class="feature-highlights">
+                        {% for post in posts %}
+                            <div class="highlight-item">
+                                <img src="images/index/gallery/{{ post.imagen }}" alt="{{ post.titulo }}">
+                                <div class="highlight-title">{{ post.titulo }}</div>
+                                <div class="highlight-desc">{{ post.text }}</div>
+                            </div>
+                        {% endfor %}
+                        <div class="highlight-item">
+                            <div class="highlight-icon">👑</div>
+                            <div class="highlight-title">Premium Quality</div>
+                            <div class="highlight-desc">Only the finest materials and fabrics make it into our collections</div>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">🌱</div>
+                            <div class="highlight-title">Sustainable</div>
+                            <div class="highlight-desc">Ethically sourced materials with carbon-neutral production</div>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">✨</div>
+                            <div class="highlight-title">Handcrafted</div>
+                            <div class="highlight-desc">Each piece is carefully crafted by skilled artisans</div>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

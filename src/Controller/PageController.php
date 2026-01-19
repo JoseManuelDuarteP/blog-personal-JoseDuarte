@@ -7,14 +7,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Comentario;
 use App\Form\ComentarioFormType;
+use App\Form\PostFormType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Image;
 use App\Repository\ImageRepository;
 use App\Repository\LikeRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Like;
+use App\Entity\Post;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 final class PageController extends AbstractController
 {
@@ -31,10 +33,55 @@ final class PageController extends AbstractController
     }
 
     #[Route('/blog', name: 'blog')]
-    public function blog(): Response
+    public function blog(ManagerRegistry $doctrine): Response
     {
+        $repoPosts = $doctrine->getRepository(Post::class);
+        $posts = $repoPosts->findAll();
+
         return $this->render('page/blog.html.twig', [
             'controller_name' => 'PageController',
+            'posts' => $posts
+        ]);
+    }
+
+    #[Route('/blog/new_post', name: 'new_post')]
+    public function newPost(Request $request, ManagerRegistry $doctrine): Response
+    {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $post = new Post();
+        $post->setUser($this->getUser());
+
+        $form = $this->createForm(PostFormType::class, $post);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $imagen = $form->get('imagen')->getData();
+            if ($imagen) {
+                $newFilename = uniqid().'.'.$imagen->guessExtension();
+                try {
+                    $imagen->move(
+                        $this->getParameter('images_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    return new Response('Error al subir la imagen: ' . $e->getMessage());
+                }
+                $post->setImagen($newFilename);
+            }
+
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($post);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('blog');
+        }
+
+        return $this->render('page/new_post.html.twig', [
+            'controller_name' => 'PageController',
+            'form' => $form->createView(),
         ]);
     }
 
@@ -101,14 +148,14 @@ final class PageController extends AbstractController
             'image' => $image,
         ]);
     }
-        //Funciona, hacerlo con ajax para no recargar la pagina
-    #[Route('/like/{imageId}', name: 'like_image', methods: ['POST'])] // Limitamos a POST
+
+    #[Route('/like/{imageId}', name: 'like_image', methods: ['POST'])]
     public function likeImage(
         int $imageId,
         ImageRepository $imageRepository, 
         LikeRepository $likeRepository, 
         ManagerRegistry $doctrine
-    ): JsonResponse // Cambiamos el tipo de retorno a JsonResponse
+    ): JsonResponse
     {
         $user = $this->getUser();
         
@@ -150,7 +197,7 @@ final class PageController extends AbstractController
         // Devolvemos JSON con el nuevo número y el estado
         return $this->json([
             'numLikes' => $image->getNumLikes(),
-            'liked' => $liked // Útil si quieres cambiar el color del botón
+            'liked' => $liked
         ]);
     }
 }
