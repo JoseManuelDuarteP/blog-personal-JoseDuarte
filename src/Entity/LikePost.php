@@ -18,6 +18,12 @@ class LikePost
     #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id')]
     private ?Post $post = null;
 
+    public function __construct(User $user, Post $post)
+    {
+        $this->user = $user;
+        $this->post = $post;
+    }
+
     public function getUser(): ?User
     {
         return $this->user;

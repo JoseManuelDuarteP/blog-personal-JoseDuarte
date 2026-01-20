@@ -13,29 +13,16 @@
                     
                     <div class="feature-highlights">
                         {% for post in posts %}
-                            <div class="highlight-item">
-                                <img src="images/index/gallery/{{ post.imagen }}" alt="{{ post.titulo }}">
-                                <div class="highlight-title">{{ post.titulo }}</div>
-                                <div class="highlight-desc">{{ post.text }}</div>
-                            </div>
+                            <a href="{{ path('blog_post', {'id': post.id}) }}">
+                                <div class="highlight-item">
+                                    <img style="max-width: 600px; height: auto;" src="images/index/gallery/{{ post.imagen }}" alt="{{ post.titulo }}">
+                                    <div class="highlight-title tituloPost">{{ post.titulo }}</div>
+                                    <div class="highlight-desc">{{ post.text }}</div>
+                                    <div class="highlight-title likesPost">LIKES: {{ post.getLikePosts | length }}</div>
+                                </div>
+                            </a>
                         {% endfor %}
-                        <div class="highlight-item">
-                            <div class="highlight-icon">👑</div>
-                            <div class="highlight-title">Premium Quality</div>
-                            <div class="highlight-desc">Only the finest materials and fabrics make it into our collections</div>
-                        </div>
-                        <div class="highlight-item">
-                            <div class="highlight-icon">🌱</div>
-                            <div class="highlight-title">Sustainable</div>
-                            <div class="highlight-desc">Ethically sourced materials with carbon-neutral production</div>
-                        </div>
-                        <div class="highlight-item">
-                            <div class="highlight-icon">✨</div>
-                            <div class="highlight-title">Handcrafted</div>
-                            <div class="highlight-desc">Each piece is carefully crafted by skilled artisans</div>
-                        </div>
                     </div>
-                
                 </div>
             </div>
         </div>

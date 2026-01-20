@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block title%}Post{% endblock %}
+
+{% block body %}
+    <style>
+        /* Agrega esto aquí o en tu archivo CSS principal */
+        .btn-like-post.liked {
+            background-color: red;
+            color: white;
+            border-color: red;
+        }
+    </style>
+
+    <div class="cat-container">
+        <div class="cat-form-wrapper">
+            <h2 class="section-title">{{ post.titulo }}</h2>
+            
+            {% if post.imagen %}
+                <img src="{{ asset('images/index/gallery/' ~ post.imagen) }}" alt="{{ post.titulo }}">
+            {% endif %}
+            
+            <p>{{ post.text }}</p>
+            
+            <div class="interactions">
+                {# Lógica para saber si el usuario actual ya dio like #}
+                {% set isLiked = false %}
+                {% if app.user %}
+                     {% for like in post.likePosts %}
+                        {% if like.user == app.user %}
+                            {% set isLiked = true %}
+                        {% endif %}
+                     {% endfor %}
+                {% endif %}
+
+                {# Usamos la clase .liked condicionalmente #}
+                <button class="form-submit btn-like-post {{ isLiked ? 'liked' : '' }}" 
+                        data-id="{{ post.id }}">
+                    {{ isLiked ? 'Unlike' : 'Dar Like' }}
+                </button>
+
+                <span id="likes-counter">Likes: {{ post.likePosts|length }}</span>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ asset('likePostAsc.js') }}"></script>
+{% endblock %}

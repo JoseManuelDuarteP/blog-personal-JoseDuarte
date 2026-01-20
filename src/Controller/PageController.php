@@ -13,13 +13,20 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Image;
 use App\Repository\ImageRepository;
 use App\Repository\LikeRepository;
+use App\Repository\LikePostRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Like;
+use App\Entity\LikePost;
 use App\Entity\Post;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use App\Repository\PostRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 final class PageController extends AbstractController
 {
+    use TargetPathTrait;
+
     #[Route('/', name: 'home')]
     public function index(ManagerRegistry $doctrine): Response
     {
@@ -44,9 +51,28 @@ final class PageController extends AbstractController
         ]);
     }
 
-    #[Route('/blog/new_post', name: 'new_post')]
-    public function newPost(Request $request, ManagerRegistry $doctrine): Response
+    #[Route('/blog/post/{id}', name: 'blog_post')]
+    public function blogPost($id, ManagerRegistry $doctrine): Response
     {
+        $repoPosts = $doctrine->getRepository(Post::class);
+        $post = $repoPosts->find($id);
+
+        if (!$post) {
+            throw $this->createNotFoundException('Post not found');
+        }
+
+        return $this->render('page/blog_post.html.twig', [
+            'controller_name' => 'PageController',
+            'post' => $post
+        ]);
+    }
+
+    #[Route('/blog/new_post', name: 'new_post')]
+    public function newPost(Request $request, ManagerRegistry $doctrine, string $firewallName = 'main'): Response
+    {
+        // Guardamos la URL objetivo antes de redirigir al login
+        $this->saveTargetPath($request->getSession(), $firewallName, $this->generateUrl('new_post'));
+
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
@@ -84,6 +110,8 @@ final class PageController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+
 
     #[Route('/contact', name: 'contact')]
     public function contact(Request $request, ManagerRegistry $doctrine): Response
@@ -125,6 +153,7 @@ final class PageController extends AbstractController
 
         foreach ($imagenes as $imagen) {
             $data[] = [
+                'id' => $imagen->getId(),
                 'title' => $imagen->getTitle(),
                 'file' => $imagen->getFile(),
                 'category' => $imagen->getCategory()->getName(),
@@ -197,6 +226,52 @@ final class PageController extends AbstractController
         // Devolvemos JSON con el nuevo número y el estado
         return $this->json([
             'numLikes' => $image->getNumLikes(),
+            'liked' => $liked
+        ]);
+    }
+
+    #[Route('/like_post/{postId}', name: 'like_post', methods: ['POST'])]
+    public function likePost(
+        int $postId,
+        PostRepository $postRepository, 
+        LikePostRepository $likePostRepository, 
+        EntityManagerInterface $em // Inyección directa, más limpio
+    ): JsonResponse
+    {
+        $user = $this->getUser();
+        
+        if(!$user) {
+            return $this->json(['error' => 'Usuario no logueado'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $post = $postRepository->find($postId);
+
+        if (!$post) {
+            return $this->json(['message' => 'Post no encontrado'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Buscamos si existe el like para decidir si borrar o crear
+        $existingLike = $likePostRepository->findOneBy([
+            'user' => $user,
+            'post' => $post
+        ]);
+
+        if ($existingLike) {
+            $em->remove($existingLike);
+            $liked = false;
+        } else {
+            $like = new LikePost($user, $post);
+            $em->persist($like);
+            $liked = true;
+        }
+
+        $em->flush();
+
+        // Contamos el total actualizado
+        $totalLikes = $likePostRepository->count(['post' => $post]);
+
+        return $this->json([
+            'numLikes' => $totalLikes,
             'liked' => $liked
         ]);
     }

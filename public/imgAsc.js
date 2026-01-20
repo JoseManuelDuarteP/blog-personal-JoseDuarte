@@ -21,11 +21,11 @@ $(document).on('click', '.tab-btn', function () {
             }
 
             data.forEach(function (image) {
-
+                console.log(image);
                 grid.append(`
                     <div class="collection-card">
                         <div class="collection-thumbnail">
-                            <a href="#">
+                            <a href="/product_file/${image.id}">
                                 <img src="/images/index/gallery/${image.file}" alt="${image.title}">
                             </a>
                         </div>

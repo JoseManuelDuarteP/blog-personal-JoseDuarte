@@ -1121,19 +1121,51 @@ nav.scrolled {
 	margin-bottom: 40px;
 }
 
+.feature-highlights a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
 .highlight-item {
 	padding: 25px;
 	background: rgba(255, 255, 255, 0.02);
 	border: 1px solid rgba(255, 255, 255, 0.05);
 	border-radius: 8px;
-	text-align: center;
 	transition: all 0.3s ease;
+}
+
+.highlight-item img {
+	margin-bottom: 15px;
+	text-align: center;
+	display: block;
+	margin: 0 auto;
+}
+
+.likesPost {
+	margin-top: 20px;
+}
+
+.tituloPost {
+	margin-top: 20px;
+	text-align: center;
+}
+
+.btn-like-post {
+	margin-top: 20px;
+	max-width: 200px;
 }
 
 .highlight-item:hover {
 	background: rgba(255, 255, 255, 0.05);
 	border-color: var(--accent);
 	transform: translateY(-5px);
+}
+
+.likes-count {
+	color: var(--accent);
+	font-weight: 600;
+	margin-left: 8px;
 }
 
 .highlight-icon {

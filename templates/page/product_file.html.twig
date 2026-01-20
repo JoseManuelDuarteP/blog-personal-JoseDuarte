@@ -15,8 +15,21 @@
             <div class="compra">
                 <p class="texto-imagen"><b>Price: </b>{{ image.price }}$</p>
                 <button class="form-submit">Add to Cart</button>
+                {% set isLiked = false %}
+                {% if app.user %}
+                    {# Recorremos los likes de la imagen para ver si el usuario actual está ahí #}
+                    {% for like in image.likes %}
+                        {% if like.user == app.user %}
+                            {% set isLiked = true %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
                 
-                <button class="form-submit like" data-id="{{ image.id }}">Like</button>
+                <button class="form-submit like" 
+                        data-id="{{ image.id }}"
+                        style="{{ isLiked ? 'background-color: red;' : '' }}">
+                    {{ isLiked ? 'Unlike' : 'Like' }}
+                </button>
             </div>
         </div>
     </div>

@@ -116,6 +116,11 @@ class Post
         return $this->likePosts;
     }
 
+    public function countLikes(): int
+    {
+        return $this->likePosts->count();
+    }
+
     public function addLikePost(LikePost $likePost): static
     {
         if (!$this->likePosts->contains($likePost)) {

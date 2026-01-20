@@ -19,6 +19,10 @@ class AdminController extends AbstractController
     #[Route('/admin/images', name: 'app_images')]
     public function images(ManagerRegistry $doctrine, Request $request, SluggerInterface $slugger): Response
     {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $repo = $doctrine->getRepository(Image::class);
         $images = $repo->findAll();
 
@@ -60,6 +64,10 @@ class AdminController extends AbstractController
     #[Route('/admin/categories', name: 'app_categories')]
     public function categories(ManagerRegistry $doctrine, Request $request): Response
     {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+        
         $repo = $doctrine->getRepository(Category::class);
         $categories = $repo->findAll();
 
